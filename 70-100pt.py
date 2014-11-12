@@ -64,6 +64,18 @@ class myApp(object):
         if event.char == "w":
             drawpad.move(player,0,-4)
             drawpad.move(rocket1,0,-4)
+        if event.char == "s":
+            drawpad.move(player,0,4)
+            drawpad.move(rocket1,0,4)
+        if event.char == "a":
+            drawpad.move(player,-4,0)
+            drawpad.move(rocket1,-4,0)
+        if event.char == "d":
+            drawpad.move(player,4,0)
+            drawpad.move(rocket1,4,0)
+           
+   
+            
             
     
     def collisionDetect(self, rocket):
