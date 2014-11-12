@@ -9,11 +9,12 @@
 from Tkinter import *
 root = Tk()
 drawpad = Canvas(root, width=800,height=600, background='white')
-rocket1 = drawpad.create_rectangle(400,585,405,590)
 player = drawpad.create_oval(390,580,410,600, fill="blue")
 enemy = drawpad.create_rectangle(50,50,100,60, fill="red")
-rocket1Fired = False
-
+missile = drawpad.create_rectangle(395, 582, 405, 598, fill = "red")
+missile1 = False
+rockets = 3
+hit = False
 direction = 5
 
 
@@ -46,39 +47,76 @@ class myApp(object):
         global drawpad
         global enemy
         global direction
-        global rocket
-        global rocket1Fired
+        global rockets
+        global missile
+        global missile1
+        px1, py1, px2, py2 = drawpad.coords(player)
+        mx1, my1, mx2, my2 = drawpad.coords(missile)
+        if missile1 == True:
+            if my2 > 0:
+                drawpad.move(missile, 0, -15)
+                didwehit = self.collisionDetect()
+            if my2 < 0:
+                x = (mx1 - px1) - 5
+                y = (py1 - my1) + 3
+                drawpad.move(missile, x, y)
+                missile1 = False
+                
         x1,y1,x2,y2 = drawpad.coords(enemy)
-        px1,py1,px2,py2 = drawpad.coords(player)
-
         if x2 > 800:
             direction = - 5
         elif x1 < 0:
             direction = 5
         drawpad.move(enemy, direction, 0)
         drawpad.after(5,self.animate)
-
+ 
     def key(self,event):
-        global player
-        global rocket1Fired
-        if event.char == "w":
-            drawpad.move(player,0,-4)
-            drawpad.move(rocket1,0,-4)
-        if event.char == "s":
-            drawpad.move(player,0,4)
-            drawpad.move(rocket1,0,4)
-        if event.char == "a":
-            drawpad.move(player,-4,0)
-            drawpad.move(rocket1,-4,0)
-        if event.char == "d":
-            drawpad.move(player,4,0)
-            drawpad.move(rocket1,4,0)
+          global player
+          global missile1
+          global rockets
+          px1, py1, px2, py2 = drawpad.coords(player)
+          if event.char == " ":
+            if rockets > 0:
+                missile1 = True
+                rockets = rockets - 1
+                self.rocketsTxt.configure(text = str(rockets))
+          if event.char == "w":
+             if py1 > 1:
+                drawpad.move(player,0,-10)
+                drawpad.move(missile, 0, -10)
+            
+                 
+          if event.char == "a":
+             if px1 > 1:
+                 drawpad.move(player, -10, 0)
+                 drawpad.move(missile,-10, 0)
            
-   
-            
-            
+                 
+          if event.char == "s":
+              if py2 < 599:
+                 drawpad.move(player, 0, 10)
+                 drawpad.move(missile, 0, 10)
+             
+          if event.char == "d":
+              if px2 < 799:
+                 drawpad.move(player, 10, 0)
+                 drawpad.move(missile, 10, 0)
+        
+        
     
-    def collisionDetect(self, rocket):
-        rx1,ry1,rx2,ry2 = drawpad.coords(rocket)
-app = myApp(root)
+    def collisionDetect(self,rocket):
+              rx1,ry1,rx2,ry2 = drawpad.coords(rocket)       
+             
+
+    def collisionDetect(self):
+            global missile       
+            global enemy
+            global hit
+            global drawpad
+            rx1,ry1,rx2,ry2 = drawpad.coords(missile)
+            x1, y1, x2, y2 = drawpad.coords(enemy)
+            if (rx1 > x1 and rx2 < x2) and (ry1 > y1 and ry1 < y2):
+             drawpad.delete(enemy)
+            drawpad.delete(missile)
+myapp = myApp(root)
 root.mainloop()
